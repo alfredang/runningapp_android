@@ -11,3 +11,6 @@
 # Secrets & signing — never commit
 /keystore/
 keystore.properties
+
+# Playwright MCP scratch
+.playwright-mcp/
