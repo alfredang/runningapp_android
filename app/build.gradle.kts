@@ -81,6 +81,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 
+    // Force a modern Fragment version. The app uses ComponentActivity (no Fragments),
+    // but a stale transitive fragment:1.1.0 trips the InvalidFragmentVersionForActivityResult
+    // lint check on registerForActivityResult; 1.3.0+ has the corrected behavior.
+    implementation("androidx.fragment:fragment:1.8.5")
+
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
