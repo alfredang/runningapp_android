@@ -11,6 +11,14 @@
 
 </div>
 
+## Screenshot
+
+<div align="center">
+
+<img src="screenshot.png" alt="RunTrack GPS — set your distance goal and start running" width="320">
+
+</div>
+
 ## About
 
 The native **Android** port of [RunTrack GPS](../../iOS/runningapp). Built entirely with
