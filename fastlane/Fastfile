@@ -1,0 +1,49 @@
+default_platform(:android)
+
+# RunTrack GPS — Play Store upload/promotion via the Google Play Developer API.
+#
+# Prereqs (one-time, done by you):
+#   1. local.properties has a real MAPS_API_KEY  -> then `bundle exec fastlane build` (or ./gradlew :app:bundleRelease)
+#   2. keystore/play-service-account.json exists  -> Google Cloud service account JSON with
+#      "Service Account User" + access granted in Play Console (Users & permissions → invite the
+#      service-account email → grant "Release to testing tracks" + "Release to production").
+#   3. The app's "Set up your app" tasks (Data safety, Content rating, Target audience, App access,
+#      privacy URL https://www.tertiaryinfotech.com/privacy-policy-html, background-location
+#      declaration + demo video) are completed in the Console — these have NO API.
+#
+# Then:
+#   bundle exec fastlane closed       # upload AAB to the Closed testing (alpha) track
+#   bundle exec fastlane production    # promote to Production (rolled out, sent for review)
+
+AAB = "app/build/outputs/bundle/release/app-release.aab"
+
+platform :android do
+  desc "Build the signed release AAB"
+  lane :build do
+    gradle(task: "bundleRelease")
+  end
+
+  desc "Upload the release AAB to the Closed testing (alpha) track"
+  lane :closed do
+    upload_to_play_store(
+      track: "alpha",
+      aab: AAB,
+      release_status: "completed",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+
+  desc "Promote the build to Production and send for review"
+  lane :production do
+    upload_to_play_store(
+      track: "production",
+      aab: AAB,
+      release_status: "completed", # full rollout; use "draft" to stage without sending for review
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+end

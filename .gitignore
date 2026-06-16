@@ -14,3 +14,9 @@ keystore.properties
 
 # Playwright MCP scratch
 .playwright-mcp/
+
+# fastlane
+**/play-service-account.json
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/README.md

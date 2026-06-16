@@ -177,6 +177,28 @@ then `./gradlew :app:bundleRelease` and upload the new AAB.
 5. Add release notes → **Review release → Start rollout to Production → Send for review.** First
    review is typically a few days.
 
+### 6.5 Automated upload via fastlane (Google Play Developer API)
+Instead of clicking, uploads/promotions can be scripted. Lanes are in [`fastlane/Fastfile`](fastlane/Fastfile).
+
+**One-time setup (you):**
+1. **Service account:** Play Console → **Users & permissions → API access** (or Google Cloud → IAM →
+   Service Accounts) → create a service account → create a **JSON key**. Save it to
+   `keystore/play-service-account.json` (gitignored).
+2. In Play Console → **Users & permissions**, invite the service-account email and grant **Release
+   to testing tracks** and **Release to production**.
+3. The Console "Set up your app" questionnaires (Data safety, content rating, target audience, app
+   access, privacy URL, background-location declaration + demo video) have **no API** — complete them
+   in the web UI once.
+
+**Then, from the repo root:**
+```bash
+fastlane closed       # upload the AAB to the Closed testing (alpha) track
+fastlane production   # promote to Production and roll out / send for review
+```
+> The very first release on a brand-new track sometimes must be created once in the Console before the
+> API will accept updates; if `fastlane closed` errors on "no existing release", do that first upload
+> manually, then the API works for everything after.
+
 ### 6.4 Release notes — copy/paste
 ```
 RunTrack GPS — first release.

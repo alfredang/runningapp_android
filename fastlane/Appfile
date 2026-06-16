@@ -1,0 +1,2 @@
+json_key_file("keystore/play-service-account.json") # gitignored — Play Developer API service account
+package_name("com.tertiaryinfotech.runtrackgps")
