@@ -78,8 +78,6 @@ class RunViewModel(app: Application) : AndroidViewModel(app) {
     // Permission snapshots (refreshed after the runtime prompt resolves).
     var isLocationAuthorized by mutableStateOf(false)
         private set
-    var hasBackgroundAuthorization by mutableStateOf(false)
-        private set
 
     // MARK: Completed run + alerts + history
     var completedSession by mutableStateOf<RunSession?>(null)
@@ -107,7 +105,6 @@ class RunViewModel(app: Application) : AndroidViewModel(app) {
 
     fun refreshPermissions() {
         isLocationAuthorized = location.isAuthorized
-        hasBackgroundAuthorization = location.hasBackgroundAuthorization
     }
 
     fun deleteRun(session: RunSession) {

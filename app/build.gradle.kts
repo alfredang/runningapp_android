@@ -23,8 +23,8 @@ android {
         applicationId = "com.tertiaryinfotech.runtrackgps"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.0.2"
 
         // Surfaced to AndroidManifest.xml as ${MAPS_API_KEY}.
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey

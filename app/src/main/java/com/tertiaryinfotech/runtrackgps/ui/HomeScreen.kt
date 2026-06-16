@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LocationOff
-import androidx.compose.material.icons.filled.NightlightRound
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -107,11 +106,6 @@ private fun PermissionBanner(vm: RunViewModel) {
             Icons.Filled.LocationOff,
             "Location access is required to track your run.",
             Color(0xFFFF9800),
-        )
-        !vm.hasBackgroundAuthorization -> Banner(
-            Icons.Filled.NightlightRound,
-            "Allow \"Allow all the time\" location for full background tracking.",
-            Color(0xFFFFC107),
         )
     }
 }

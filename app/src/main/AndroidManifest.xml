@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ===== Location ===== -->
+    <!-- ===== Location (foreground only — tracking runs while the app is open) ===== -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- Background tracking while the screen is locked (Android 10+). -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
-    <!-- ===== Foreground service (keeps GPS alive in the background) ===== -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-    <!-- Notification for the foreground service (Android 13+). -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- ===== Voice commands ===== -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -42,11 +34,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Foreground location service for background run tracking. -->
-        <service
-            android:name=".location.LocationService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
     </application>
 </manifest>

@@ -2,10 +2,8 @@ package com.tertiaryinfotech.runtrackgps.location
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -22,9 +20,8 @@ import kotlinx.coroutines.flow.asStateFlow
  * Wraps FusedLocationProvider: requests fixes, filters noisy GPS, accumulates
  * distance, and publishes the route for the map + view model to observe.
  *
- * A foreground [LocationService] is started while tracking so location keeps
- * flowing when the screen is locked (Android's background-location requirement).
- * Mirrors the iOS LocationManager (CoreLocation) and its filtering rules.
+ * Tracking runs while the app is in the foreground. Mirrors the iOS
+ * LocationManager (CoreLocation) and its filtering rules.
  */
 class LocationManager(private val context: Context) {
 
@@ -66,13 +63,6 @@ class LocationManager(private val context: Context) {
             ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED
 
-    /** "Always"/background location, needed for full background tracking. */
-    val hasBackgroundAuthorization: Boolean
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED
-        } else isAuthorized
-
     // MARK: Tracking lifecycle
     fun startTracking() {
         if (!isAuthorized) return
@@ -85,7 +75,6 @@ class LocationManager(private val context: Context) {
             client.requestLocationUpdates(request, callback, context.mainLooper)
         } catch (_: SecurityException) {
         }
-        startForegroundService()
     }
 
     /** Stops feeding new fixes into the distance total without discarding the route. */
@@ -101,7 +90,6 @@ class LocationManager(private val context: Context) {
     fun stopTracking() {
         isTracking = false
         client.removeLocationUpdates(callback)
-        stopForegroundService()
     }
 
     /** Clears all accumulated data for a fresh run. */
@@ -155,14 +143,5 @@ class LocationManager(private val context: Context) {
 
     private fun appendCoordinate(location: Location) {
         _route.value = _route.value + Coordinate(location.latitude, location.longitude)
-    }
-
-    private fun startForegroundService() {
-        val intent = Intent(context, LocationService::class.java)
-        ContextCompat.startForegroundService(context, intent)
-    }
-
-    private fun stopForegroundService() {
-        context.stopService(Intent(context, LocationService::class.java))
     }
 }
