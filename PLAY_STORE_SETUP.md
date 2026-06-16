@@ -102,9 +102,15 @@ keytool -list -v -keystore keystore/runtrackgps-release.jks -alias runtrackgps |
      - **Users can request data deletion:** data lives only on-device and is removed on uninstall /
        via in-app *Clear* in History.
    - A ready-to-paste summary is in **§7** below.
-8. **Privacy policy:** a hosted URL is **required** because the app requests location. A ready-made
-   policy is in [`store/privacy-policy.md`](store/privacy-policy.md) — host it (GitHub Pages, your
-   site, etc.) and paste the URL.
+8. **Privacy policy:** a hosted URL is **required** because the app requests location. Use the
+   company policy already live at **<https://www.tertiaryinfotech.com/privacy-policy-html>** — paste
+   that URL into Play Console. (A longer app-specific version is kept in
+   [`store/privacy-policy.md`](store/privacy-policy.md) for reference, but the company URL is what we
+   submit.)
+   > Note: the company page is a general PDPA policy and does not explicitly mention location/mobile
+   > data. Because the app transmits nothing off-device this is acceptable, but if Play's reviewer
+   > pushes back on the background-location declaration, host the fuller policy in
+   > `store/privacy-policy.md` at a tertiaryinfotech.com URL and swap it in.
 9. **Government apps / Financial / Health:** No to all (it's a personal fitness tracker).
 10. **Foreground service / Location permission declaration:** Because the app uses
     `ACCESS_BACKGROUND_LOCATION` + a `location` foreground service, Play will ask you to **justify
@@ -127,15 +133,58 @@ keytool -list -v -keystore keystore/runtrackgps-release.jks -alias runtrackgps |
 
 ---
 
-## 6. Create a release  **[YOU]**
+## 6. Release path: Internal → **Closed test** → Production  **[YOU]**
 
-1. **Release → Testing → Internal testing** (fastest; recommended first).
-   - Upload `app-release.aab`.
-   - Add your own Google account as a tester, save, roll out.
-   - Install via the opt-in link on your phone and verify.
-2. When happy: **Release → Production → Create new release**, upload the same AAB (or a new
-   versionCode), complete the release notes, and **Send for review**. First review is typically a few
-   days.
+> Current Console state: **Draft · Internal testing** (versionCode 1 already uploaded). The goal is
+> Production. The bridge is a **Closed test**.
+>
+> **Why a closed test is required:** Google requires personal developer accounts (created after
+> 13 Nov 2023) to run a **closed test with at least 12 testers, opted-in for 14 days**, before they
+> can apply for production access. The Tertiary Infotech account is an **organisation** account,
+> which is normally exempt — but running a closed test first is still the safe, recommended path and
+> is what this guide assumes. If the Console offers "Apply for production access" without the
+> 12-tester gate, you may skip straight to §6.3.
+
+### 6.1 Create the Closed testing track
+1. **Release → Testing → Closed testing → Create track** (or use the default "Closed testing –
+   Alpha"). Name it e.g. **Alpha**.
+2. **Testers tab → create an email list** and add tester Google accounts (aim for **12+** if you want
+   to satisfy the production-access requirement). Save.
+3. **Releases tab → Create new release.**
+   - **Promote the existing build:** the versionCode 1 bundle already in Internal testing can be
+     promoted — no rebuild. Or upload `app/build/outputs/bundle/release/app-release.aab` fresh.
+   - Add **release notes** (a starter is in §6.4 below).
+   - **Save → Review release → Start rollout to Closed testing.**
+4. Share the **opt-in URL** (Testers tab) with your testers. Have them join and install. Keep the
+   test open **≥ 14 days** with **≥ 12 testers** if you're using it to unlock production access.
+
+### 6.2 Rebuild only if you change versionCode
+Promoting reuses versionCode 1. If you instead want a *new* upload, bump it first:
+```kotlin
+// app/build.gradle.kts
+versionCode = 2
+versionName = "1.0.1"
+```
+then `./gradlew :app:bundleRelease` and upload the new AAB.
+
+### 6.3 Promote to Production
+1. **Release → Production → Create new release.**
+2. **Promote** the closed-testing build (recommended) or upload the AAB.
+3. Confirm the **Data safety**, **content rating**, **target audience**, **app access**, and the
+   **background-location declaration + demo video** (§4.10) are all complete — Production won't submit
+   until every "Set up your app" task is green.
+4. **Privacy policy URL** must be set to <https://www.tertiaryinfotech.com/privacy-policy-html>.
+5. Add release notes → **Review release → Start rollout to Production → Send for review.** First
+   review is typically a few days.
+
+### 6.4 Release notes — copy/paste
+```
+RunTrack GPS — first release.
+- GPS run tracking with live route map, distance, pace, and timer
+- Voice commands: start, pause, resume, stop
+- Background tracking with a persistent notification (screen can be off)
+- Local run history — no account, no ads, no data leaves your device
+```
 
 > **Play App Signing:** accept it when prompted (default). Google holds the *app signing key*; your
 > `.jks` is only the *upload key*. If you ever lose the upload key, Google can reset it — but still

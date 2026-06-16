@@ -2,6 +2,9 @@
 
 _Last updated: 14 June 2026_
 
+> **Canonical URL submitted to Google Play:** <https://www.tertiaryinfotech.com/privacy-policy-html>
+> This Markdown is the fuller, app-specific version kept for reference.
+
 RunTrack GPS ("the app") is developed by Tertiary Infotech Academy Pte. Ltd. ("we", "us"). This
 policy explains what the app accesses and how your data is handled. **In short: your data stays on
 your device. We do not collect, transmit, sell, or share it.**
